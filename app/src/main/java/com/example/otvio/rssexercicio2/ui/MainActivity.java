@@ -1,12 +1,16 @@
 package com.example.otvio.rssexercicio2.ui;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +24,7 @@ import android.widget.Toast;
 import com.example.otvio.rssexercicio2.R;
 import com.example.otvio.rssexercicio2.db.SQLiteRSSHelper;
 import com.example.otvio.rssexercicio2.domain.ItemRSS;
+import com.example.otvio.rssexercicio2.util.CarregaFeedService;
 import com.example.otvio.rssexercicio2.util.ParserRSS;
 
 import org.xmlpull.v1.XmlPullParserException;
@@ -75,7 +80,6 @@ public class MainActivity extends Activity {
                 SimpleCursorAdapter adapter = (SimpleCursorAdapter) parent.getAdapter();
                 Cursor mCursor = ((Cursor) adapter.getItem(position));
                 String link=mCursor.getString(4);
-               // Toast.makeText(getApplicationContext(),link,Toast.LENGTH_LONG).show();
 
                   if (db.markAsRead(link)){
                     Intent intent = new Intent(getApplicationContext(),WebActivity.class);
@@ -86,7 +90,6 @@ public class MainActivity extends Activity {
                     Toast.makeText(getApplicationContext(),"Não foi possível realizar a ação!"
                             ,Toast.LENGTH_LONG).show();
                 }
-                /* */
             }
         });
     }
@@ -96,7 +99,16 @@ public class MainActivity extends Activity {
         super.onStart();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String linkfeed = preferences.getString("rssfeedlink", getResources().getString(R.string.rssfeed));
-        new CarregaRSS().execute(linkfeed);
+       // new CarregaRSS().execute(linkfeed);
+        Intent load_feed=new Intent(this,CarregaFeedService.class);
+        load_feed.putExtra("link",linkfeed);
+        startService(load_feed);
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter f = new IntentFilter(CarregaFeedService.FEED_LOADED);
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(onDownloadCompleteEvent, f);
     }
 
     @Override
@@ -198,4 +210,12 @@ public class MainActivity extends Activity {
         }
         return rssFeed;
     }
+
+    private BroadcastReceiver onDownloadCompleteEvent=new BroadcastReceiver() {
+        public void onReceive(Context ctxt, Intent i) {
+            Toast.makeText(ctxt, "Feed carregado com sucesso!", Toast.LENGTH_LONG).show();
+            new MainActivity.ExibirFeed().execute();
+        }
+    };
+
 }

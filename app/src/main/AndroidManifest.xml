@@ -25,6 +25,9 @@
             android:authorities="br.ufpe.cin.residencia.rss"
             android:enabled="true"
             android:exported="true" />
+        <service android:name=".util.CarregaFeedService"
+            android:enabled="true"
+            android:exported="true"/>
 
     </application>
 
