@@ -15,10 +15,12 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.util.List;
 
-
+//Service para carregar na main activity os links
 public class CarregaFeedService extends IntentService {
     private SQLiteRSSHelper db = SQLiteRSSHelper.getInstance(this);
+
     public static final String FEED_LOADED = "com.example.otvio.rssexercicio2.ui.action.FEED_LOADED";
+    public static final String INSERTED_DATA = "com.example.otvio.rssexercicio2.ui.action.INSERTED_DATA";
     public CarregaFeedService() {
         super("CarregaFeedService");
     }
@@ -35,8 +37,10 @@ public class CarregaFeedService extends IntentService {
                 Log.d("DB", "Buscando no Banco por link: " + i.getLink());
                 ItemRSS item = db.getItemRSS(i.getLink());
                 if (item == null) {
+                    sendBroadcast(new Intent(INSERTED_DATA));
                     Log.d("DB", "Encontrado pela primeira vez: " + i.getTitle());
                     db.insertItem(i);
+
                 }
             }
             LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent(FEED_LOADED));

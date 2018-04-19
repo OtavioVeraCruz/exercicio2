@@ -8,8 +8,10 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Menu;
@@ -20,6 +22,7 @@ import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.example.otvio.rssexercicio2.R;
 import com.example.otvio.rssexercicio2.db.SQLiteRSSHelper;
@@ -43,6 +46,7 @@ public class MainActivity extends Activity {
     private final String RSS_FEED = "http://rss.cnn.com/rss/edition.rss";
     private SQLiteRSSHelper db;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,13 +112,21 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         IntentFilter f = new IntentFilter(CarregaFeedService.FEED_LOADED);
-        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(onDownloadCompleteEvent, f);
+        LocalBroadcastManager.getInstance(getApplicationContext()).
+                registerReceiver(onDownloadCompleteEvent, f);
     }
 
     @Override
     protected void onDestroy() {
         db.close();
         super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(getApplicationContext()).
+                unregisterReceiver(onDownloadCompleteEvent);
     }
 
     @Override
@@ -133,6 +145,7 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    //Não está sendo utilizado
     class CarregaRSS extends AsyncTask<String, Void, Boolean> {
 
         @Override

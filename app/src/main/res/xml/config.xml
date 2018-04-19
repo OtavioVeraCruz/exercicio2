@@ -11,5 +11,13 @@
             android:dialogMessage="Digite o link"
             android:positiveButtonText="Salvar"
             android:negativeButtonText="Cancelar" />
+        <EditTextPreference/>
+        <ListPreference
+            android:defaultValue="@string/tempo_default"
+            android:title="Tempo de atualização do feed."
+            android:summary="Selecione o tempo."
+            android:key="rsstime"
+            android:entries="@array/horarios"
+            android:entryValues="@array/horarios"/>
     </PreferenceCategory>
 </PreferenceScreen>
