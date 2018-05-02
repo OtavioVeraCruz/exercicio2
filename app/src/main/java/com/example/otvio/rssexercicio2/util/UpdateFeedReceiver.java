@@ -33,5 +33,6 @@ public class UpdateFeedReceiver extends BroadcastReceiver {
 
         Notification notification=mBuilder.build();
         NotificationManagerCompat.from(context.getApplicationContext()).notify(0,notification);
+        Log.d(TAG,"Entrou no update");
     }
 }

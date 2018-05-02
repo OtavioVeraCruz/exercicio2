@@ -27,20 +27,4 @@ public class WebActivity extends AppCompatActivity {
         super.onBackPressed();
         finish();
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.mainmenu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.btn_Config:
-                startActivity(new Intent(this, ConfigActivity.class));
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 }

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
     <PreferenceCategory android:title="GERAL">
         <EditTextPreference
             android:defaultValue="@string/rssfeed"
@@ -11,7 +10,6 @@
             android:dialogMessage="Digite o link"
             android:positiveButtonText="Salvar"
             android:negativeButtonText="Cancelar" />
-        <EditTextPreference/>
         <ListPreference
             android:defaultValue="@string/tempo_default"
             android:title="Tempo de atualização do feed."
