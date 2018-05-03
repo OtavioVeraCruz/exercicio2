@@ -20,7 +20,7 @@ public class CarregaFeedService extends IntentService {
     private SQLiteRSSHelper db = SQLiteRSSHelper.getInstance(this);
 
     public static final String FEED_LOADED = "com.example.otvio.rssexercicio2.ui.action.FEED_LOADED";
-    public static final String INSERTED_DATA = "com.example.otvio.rssexercicio2.ui.action.INSERTED_DATA";
+    public static final String INSERTED_DATA = "com.example.otvio.rssexercicio2.INSERTED_DATA";
     public CarregaFeedService() {
         super("CarregaFeedService");
     }

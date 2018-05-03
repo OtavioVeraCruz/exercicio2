@@ -9,36 +9,46 @@ import android.support.annotation.Nullable;
 
 
 public class RssProvider extends ContentProvider {
+    private SQLiteRSSHelper db;
     @Override
     public boolean onCreate() {
-        return false;
+        db=SQLiteRSSHelper.getInstance(getContext());
+        return true;
     }
 
     @Nullable
     @Override
-    public Cursor query(@NonNull Uri uri, @Nullable String[] strings, @Nullable String s, @Nullable String[] strings1, @Nullable String s1) {
-        return null;
+    public Cursor query(@NonNull Uri uri, @Nullable String[] projection,
+                        @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
+
+        return  db.getReadableDatabase().query(SQLiteRSSHelper.DATABASE_TABLE,
+                SQLiteRSSHelper.columns,
+                selection, selectionArgs, null, null, null);
     }
 
     @Nullable
     @Override
     public String getType(@NonNull Uri uri) {
-        return null;
+
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
-        return null;
+        long id = db.getWritableDatabase().insert(SQLiteRSSHelper.DATABASE_TABLE, null, contentValues);
+        return Uri.withAppendedPath(RssProviderContract.FEED_CONTENT_URI, Long.toString(id));
     }
 
     @Override
-    public int delete(@NonNull Uri uri, @Nullable String s, @Nullable String[] strings) {
-        return 0;
+    public int delete(@NonNull Uri uri, @Nullable String s, @Nullable String[] selectionArgs) {
+        return db.getWritableDatabase().delete(SQLiteRSSHelper.DATABASE_TABLE, s, selectionArgs);
     }
 
     @Override
-    public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String s, @Nullable String[] strings) {
-        return 0;
+    public int update(@NonNull Uri uri, @Nullable ContentValues contentValues,
+                      @Nullable String selection, @Nullable String[] selectionArgs) {
+
+        return db.getWritableDatabase().update(SQLiteRSSHelper.DATABASE_TABLE, contentValues, selection, selectionArgs);
     }
 }
